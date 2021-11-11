@@ -47,6 +47,7 @@ public struct EnteredText: View {
 	@Binding var presentedAsModal: Bool
     var style: KeyboardStyle
     var watchOSDimensions: CGRect?
+    @State var scrollAmount = 0.0
     
 	public init(text: Binding<String>, presentedAsModal:
                     Binding<Bool>, style: KeyboardStyle){
@@ -70,6 +71,7 @@ public struct EnteredText: View {
                     Text(text)
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
+                        .digitalCrownRotation($scrollAmount)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
@@ -85,14 +87,15 @@ public struct EnteredText: View {
                 }
             }
         })
-        
+        .onChange(of: scrollAmount){newValue in
+            text = String(Int(text) ?? 0 + Int(round(newValue)))
+        }
 	}
 }
 @available(iOS 13.0, watchOS 6.0, *)
  public struct DigetPadView: View {
 	public var widthSpace: CGFloat = 1.0
 	@Binding var text:String
-    @State var scrollAmount = 0.0
     var style: KeyboardStyle
     public init(text: Binding<String>, style: KeyboardStyle){
 		_text = text
@@ -194,10 +197,6 @@ public struct EnteredText: View {
 			}
         }
         .font(.title2)
-        .digitalCrownRotation($scrollAmount)
-        .onChange(of: scrollAmount){newValue in
-            text = String(Int(text) ?? 0 + Int(round(newValue)))
-        }
 	}
 }
 #endif
