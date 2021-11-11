@@ -194,7 +194,7 @@ public struct EnteredText: View {
         }
         .font(.title2)
         .focusable(true)
-        .digitalCrownRotation($scrollAmount)
+        .digitalCrownRotation($scrollAmount, from: -1000, through: 1000)
         .onChange(of: scrollAmount){newValue in
             print(newValue)
             if (Int(newValue)/1000 == 1){
