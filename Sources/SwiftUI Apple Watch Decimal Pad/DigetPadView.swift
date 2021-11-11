@@ -92,6 +92,7 @@ public struct EnteredText: View {
  public struct DigetPadView: View {
 	public var widthSpace: CGFloat = 1.0
 	@Binding var text:String
+    @State var scrollAmount = 0.0
     var style: KeyboardStyle
     public init(text: Binding<String>, style: KeyboardStyle){
 		_text = text
@@ -193,6 +194,10 @@ public struct EnteredText: View {
 			}
         }
         .font(.title2)
+        .digitalCrownRotation($scrollAmount)
+        .onChange(of: scrollAmount){newValue in
+            text = String(Int(text) ?? 0 + Int(round(newValue)))
+        }
 	}
 }
 #endif
