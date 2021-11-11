@@ -196,8 +196,13 @@ public struct EnteredText: View {
         .focusable(true)
         .digitalCrownRotation($scrollAmount)
         .onChange(of: scrollAmount){newValue in
-            text.append(String(newValue))
-//            text = String(Int(text) ?? 0 + Int(round(newValue)))
+            if (newValue == 1000){
+                text = String(Int(text) ?? 0 + 1)
+                scrollAmount = 0
+            }else if (newValue == -1000){
+                text = String(Int(text) ?? 0 - 1)
+                scrollAmount = 0
+            }
         }
 	}
 }
