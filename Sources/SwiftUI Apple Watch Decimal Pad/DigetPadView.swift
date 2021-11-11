@@ -198,11 +198,13 @@ public struct EnteredText: View {
         .onChange(of: scrollAmount){newValue in
             print(newValue)
             if (Int(newValue)/1000 == 1){
-                text = String(Int(text) ?? 0 + 1)
+                text = String((Int(text) ?? 0) + 1)
                 scrollAmount = 0
+                print(text)
             }else if (Int(newValue)/1000 == -1){
-                text = String(Int(text) ?? 0 - 1)
+                text = String((Int(text) ?? 0) - 1)
                 scrollAmount = 0
+                print(text)
             }
         }
 	}
