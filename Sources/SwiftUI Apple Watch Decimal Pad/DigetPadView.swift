@@ -55,6 +55,7 @@ public struct DigiTextView: View {
 public struct EnteredText: View {
 	@Binding var text:String
 	@Binding var presentedAsModal: Bool
+    @State var crownModifiedBy: Double = 0
     var style: KeyboardStyle
     var watchOSDimensions: CGRect?
     private var locale: Locale
@@ -79,7 +80,7 @@ public struct EnteredText: View {
                             .foregroundColor(.clear
                             )
                     })
-                    Text(text)
+                    Text("\(text) \(crownModifiedBy)")
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                 }
@@ -100,6 +101,7 @@ public struct EnteredText: View {
                 }
             }
         })
+        .digitalCrownRotation($crownModifiedBy, from: Double(Int.min), through: Double(Int.max), by: 1)
         
 	}
 }
