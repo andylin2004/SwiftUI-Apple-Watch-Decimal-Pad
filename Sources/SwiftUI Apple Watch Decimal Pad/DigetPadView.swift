@@ -96,6 +96,7 @@ public struct EnteredText: View {
                     presentedAsModal.toggle()
                 } label: {
                     Label("Done", systemImage: "xmark")
+                        .toolbarButtonNativeLabel()
                 }
             }
         })

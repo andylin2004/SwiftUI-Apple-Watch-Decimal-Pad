@@ -13,6 +13,33 @@ import SwiftUI
 @available(macCatalyst, unavailable)
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
+public struct ToolbarButtonNativeLabel: ViewModifier {
+    public func body(content: Content) -> some View {
+        if #available(watchOS 10.0, *) {
+            content
+        } else {
+            content
+                .labelStyle(.titleOnly)
+        }
+    }
+}
+
+@available(watchOS 6.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+public extension Label {
+    func toolbarButtonNativeLabel() -> some View {
+        modifier(ToolbarButtonNativeLabel())
+    }
+}
+
+@available(watchOS 6.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
 public struct DigitButtonModifier: ViewModifier {
 	public func body(content: Content) -> some View {
 		return content
