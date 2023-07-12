@@ -83,6 +83,8 @@ public struct EnteredText: View {
                     Text("\(text) \(crownModifiedBy)")
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
+                        .focusable(true)
+                        .digitalCrownRotation($crownModifiedBy, from: 0, through: 6000, by: 1)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
@@ -101,9 +103,6 @@ public struct EnteredText: View {
                 }
             }
         })
-        .focusable(true)
-        .digitalCrownRotation($crownModifiedBy, from: 0, through: 6000, by: 1)
-        
 	}
 }
 @available(watchOS 6.0, *)
