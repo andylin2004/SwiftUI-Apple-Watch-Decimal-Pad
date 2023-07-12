@@ -101,7 +101,8 @@ public struct EnteredText: View {
                 }
             }
         })
-        .digitalCrownRotation($crownModifiedBy, from: Double(Int.min), through: Double(Int.max), by: 1)
+        .focusable(true)
+        .digitalCrownRotation($crownModifiedBy, from: 0, through: 6000, by: 1)
         
 	}
 }
