@@ -55,7 +55,7 @@ public struct DigiTextView: View {
 public struct EnteredText: View {
 	@Binding var text:String
 	@Binding var presentedAsModal: Bool
-    @State var crownModifiedBy: Double = 0
+    @State var crownEditableText: Double = 0
     var style: KeyboardStyle
     var watchOSDimensions: CGRect?
     private var locale: Locale
@@ -80,11 +80,11 @@ public struct EnteredText: View {
                             .foregroundColor(.clear
                             )
                     })
-                    Text("\(text) \(crownModifiedBy)")
+                    Text("\(text) \(crownEditableText)")
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                         .focusable(true)
-                        .digitalCrownRotation($crownModifiedBy, from: 0, through: 6000, by: 1)
+                        .digitalCrownRotation($crownEditableText, from: text == "0" ? 0 : -1, through: 1, by: 1)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
@@ -103,6 +103,12 @@ public struct EnteredText: View {
                 }
             }
         })
+        .onChange(of: crownEditableText) { newValue in
+            if newValue != 0 {
+                text = String(Int(text)! + Int(newValue))
+                crownEditableText = 0
+            }
+        }
 	}
 }
 @available(watchOS 6.0, *)
