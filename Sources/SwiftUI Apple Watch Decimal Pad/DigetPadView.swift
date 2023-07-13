@@ -104,7 +104,7 @@ public struct EnteredText: View {
             }
         })
         .onChange(of: crownEditableText) { newValue in
-            if newValue != 0 {
+            if newValue == 1 || newValue == -1 {
                 text = String(Int(text)! + Int(newValue))
                 crownEditableText = 0
             }
