@@ -12,6 +12,193 @@ import SwiftUI
 @available(macCatalyst, unavailable)
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
+private struct ScrollableDigiTextView: View {
+    private var locale: Locale
+    var placeholder: String
+    @Binding public var text: Double
+    @State public var presentingModal: Bool
+    
+    var align: TextViewAlignment
+    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current){
+        _text = text
+        _presentingModal = State(initialValue: presentingModal)
+        self.align = alignment
+        self.placeholder = placeholder
+        self.locale = locale
+    }
+    
+    var body: some View {
+        Button(action: {
+            presentingModal.toggle()
+        }) {
+            Text("\(Int(text))")
+        }.buttonStyle(TextViewStyle(alignment: align))
+        .sheet(isPresented: $presentingModal, content: {
+            ScrollableEnteredText(text: $text, presentedAsModal: $presentingModal, locale: locale)
+        })
+    }
+}
+
+@available(watchOS 6.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+public struct ScrollableEnteredText: View {
+    @Binding var text: Double
+    @Binding var presentedAsModal: Bool
+    var watchOSDimensions: CGRect?
+    private var locale: Locale
+    
+    public init(text: Binding<Double>, presentedAsModal:
+                Binding<Bool>, locale: Locale = .current){
+        _text = text
+        _presentedAsModal = presentedAsModal
+        self.locale = locale
+        let device = WKInterfaceDevice.current()
+        watchOSDimensions = device.screenBounds
+    }
+    public var body: some View{
+        VStack(alignment: .trailing) {
+                Button(action:{
+                    presentedAsModal.toggle()
+                }){
+                    ZStack(content: {
+                        Text("1")
+                            .font(.title2)
+                            .foregroundColor(.clear
+                            )
+                    })
+                    Text("\(Int(text))")
+                        .font(.title2)
+                        .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
+                        .focusable(true)
+                        .digitalCrownRotation($text, from: 0, through: 10*12-1, by: 1)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .multilineTextAlignment(.trailing)
+                .lineLimit(1)
+                
+                ScrollableDigetPadView(text: $text, locale: locale)
+                    .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+        }
+        .toolbar(content: {
+            ToolbarItem(placement: .cancellationAction){
+                Button {
+                    presentedAsModal.toggle()
+                } label: {
+                    Label("Done", systemImage: "xmark")
+                        .toolbarButtonNativeLabel()
+                }
+            }
+        })
+    }
+}
+
+@available(watchOS 6.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+ public struct ScrollableDigetPadView: View {
+    public var widthSpace: CGFloat = 1.0
+    @Binding var text: Double
+    private var decimalSeparator: String
+    public init(text: Binding<Double>, locale: Locale = .current) {
+        _text = text
+
+        let numberFormatter = NumberFormatter()
+        numberFormatter.locale = locale
+        decimalSeparator = numberFormatter.decimalSeparator
+    }
+     public var body: some View {
+        VStack(spacing: 1) {
+            HStack(spacing: widthSpace){
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("1"))!)
+                }) {
+                    Text("1")
+                        .padding(0)
+                }
+                .digitKeyFrame()
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("2"))!)
+                }) {
+                    Text("2")
+                }.digitKeyFrame()
+                
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("3"))!)
+                }) {
+                            Text("3")
+                        }.digitKeyFrame()
+            }
+            HStack(spacing:widthSpace){
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("4"))!)
+                }) {
+                    Text("4")
+                }.digitKeyFrame()
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("5"))!)
+                }) {
+                    Text("5")
+                }.digitKeyFrame()
+                
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("6"))!)
+                }) {
+                    Text("6")
+                }.digitKeyFrame()
+            }
+            
+            HStack(spacing:widthSpace){
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("7"))!)
+                }) {
+                    Text("7")
+                }.digitKeyFrame()
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("8"))!)
+                }) {
+                    Text("8")
+                }.digitKeyFrame()
+                
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("9"))!)
+                }) {
+                    Text("9")
+                }
+                .digitKeyFrame()
+            }
+            HStack(spacing:widthSpace) {
+                Spacer()
+                    .padding(1)
+                Button(action: {
+                    text = Double(Int(String(Int(text)).appending("0"))!)
+                }) {
+                    Text("0")
+                }
+                .digitKeyFrame()
+                
+                Button(action: {
+                    text = Double(Int(text) / 10)
+                }) {
+                    Image(systemName: "delete.left")
+                }
+                .digitKeyFrame()
+            }
+        }
+        .font(.title2)
+    }
+}
+
+
+@available(watchOS 6.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
 public struct DigiTextView: View {
     private var locale: Locale
     var style: KeyboardStyle
@@ -47,6 +234,7 @@ public struct DigiTextView: View {
 		})		
 	}
 }
+
 @available(watchOS 6.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
@@ -103,14 +291,9 @@ public struct EnteredText: View {
                 }
             }
         })
-        .onChange(of: crownEditableText) { newValue in
-            if newValue == 1 || newValue == -1 {
-                text = String(Int(text)! + Int(newValue))
-                crownEditableText = 0
-            }
-        }
 	}
 }
+
 @available(watchOS 6.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
