@@ -27,7 +27,7 @@ public struct ScrollableDigiTextView: View {
         self.locale = locale
     }
     
-    var body: some View {
+    public var body: some View {
         Button(action: {
             presentingModal.toggle()
         }) {
