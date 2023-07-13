@@ -12,7 +12,7 @@ import SwiftUI
 @available(macCatalyst, unavailable)
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
-private struct ScrollableDigiTextView: View {
+public struct ScrollableDigiTextView: View {
     private var locale: Locale
     var placeholder: String
     @Binding public var text: Double
@@ -44,7 +44,7 @@ private struct ScrollableDigiTextView: View {
 @available(macCatalyst, unavailable)
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
-public struct ScrollableEnteredText: View {
+private struct ScrollableEnteredText: View {
     @Binding var text: Double
     @Binding var presentedAsModal: Bool
     var watchOSDimensions: CGRect?
@@ -100,7 +100,7 @@ public struct ScrollableEnteredText: View {
 @available(macCatalyst, unavailable)
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
- public struct ScrollableDigetPadView: View {
+private struct ScrollableDigetPadView: View {
     public var widthSpace: CGFloat = 1.0
     @Binding var text: Double
     private var decimalSeparator: String
