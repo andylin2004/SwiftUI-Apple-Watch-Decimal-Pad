@@ -73,7 +73,7 @@ private struct ScrollableEnteredText: View {
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                         .focusable(true)
-                        .digitalCrownRotation($text, from: 0, through: 999999, by: 1, sensitivity: .low)
+                        .digitalCrownRotation($text, from: 0, through: 999999, by: 1, sensitivity: .low, isContinuous: true)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
