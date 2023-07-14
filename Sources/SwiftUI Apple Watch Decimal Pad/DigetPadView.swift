@@ -111,42 +111,42 @@ private struct ScrollableDigetPadView: View {
         numberFormatter.locale = locale
         decimalSeparator = numberFormatter.decimalSeparator
     }
-     public var body: some View {
+    public var body: some View {
         VStack(spacing: 1) {
             HStack(spacing: widthSpace){
                 Button(action: {
-                    text = Double(String(Int(text)).appending("1"))!
+                    text = Double(Int(String(Int(text)).appending("1"))!)
                 }) {
                     Text("1")
                         .padding(0)
                 }
                 .digitKeyFrame()
                 Button(action: {
-                    text = Double(String(Int(text)).appending("2"))!
+                    text = Double(Int(String(Int(text)).appending("2"))!)
                 }) {
                     Text("2")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(String(Int(text)).appending("3"))!
+                    text = Double(Int(String(Int(text)).appending("3"))!)
                 }) {
-                            Text("3")
-                        }.digitKeyFrame()
+                    Text("3")
+                }.digitKeyFrame()
             }
             HStack(spacing:widthSpace){
                 Button(action: {
-                    text = Double(String(Int(text)).appending("4"))!
+                    text = Double(Int(String(Int(text)).appending("4"))!)
                 }) {
                     Text("4")
                 }.digitKeyFrame()
                 Button(action: {
-                    text = Double(String(Int(text)).appending("5"))!
+                    text = Double(Int(String(Int(text)).appending("5"))!)
                 }) {
                     Text("5")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(String(Int(text)).appending("6"))!
+                    text = Double(Int(String(Int(text)).appending("6"))!)
                 }) {
                     Text("6")
                 }.digitKeyFrame()
@@ -154,18 +154,18 @@ private struct ScrollableDigetPadView: View {
             
             HStack(spacing:widthSpace){
                 Button(action: {
-                    text = Double(String(Int(text)).appending("7"))!
+                    text = Double(Int(String(Int(text)).appending("7"))!)
                 }) {
                     Text("7")
                 }.digitKeyFrame()
                 Button(action: {
-                    text = Double(String(Int(text)).appending("8"))!
+                    text = Double(Int(String(Int(text)).appending("8"))!)
                 }) {
                     Text("8")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(String(Int(text)).appending("9"))!
+                    text = Double(Int(String(Int(text)).appending("9"))!)
                 }) {
                     Text("9")
                 }
@@ -175,7 +175,7 @@ private struct ScrollableDigetPadView: View {
                 Spacer()
                     .padding(1)
                 Button(action: {
-                    text = Double(String(Int(text)).appending("0"))!
+                    text = Double(Int(String(Int(text)).appending("0"))!)
                 }) {
                     Text("0")
                 }
