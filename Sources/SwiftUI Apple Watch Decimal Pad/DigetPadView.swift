@@ -31,7 +31,7 @@ public struct ScrollableDigiTextView: View {
         Button(action: {
             presentingModal.toggle()
         }) {
-            Text("\(Int(text))")
+            Text(String(format: "%.0f", text))
         }.buttonStyle(TextViewStyle(alignment: align))
         .sheet(isPresented: $presentingModal, content: {
             ScrollableEnteredText(text: $text, presentedAsModal: $presentingModal, locale: locale)
@@ -73,7 +73,7 @@ private struct ScrollableEnteredText: View {
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                         .focusable(true)
-                        .digitalCrownRotation($text, from: 0, through: pow(10, 12) - 1, by: 1)
+                        .digitalCrownRotation($text, from: 0, through: 1000000000000 - 1, by: 1)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
