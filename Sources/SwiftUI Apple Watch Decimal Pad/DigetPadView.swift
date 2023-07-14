@@ -73,7 +73,7 @@ private struct ScrollableEnteredText: View {
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                         .focusable(true)
-                        .digitalCrownRotation($text, from: 0, through: 10*12-1, by: 1)
+                        .digitalCrownRotation($text, from: 0, through: pow(10, 12) - 1, by: 1)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
@@ -115,38 +115,38 @@ private struct ScrollableDigetPadView: View {
         VStack(spacing: 1) {
             HStack(spacing: widthSpace){
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("1"))!)
+                    text = Double(String(Int(text)).appending("1"))!
                 }) {
                     Text("1")
                         .padding(0)
                 }
                 .digitKeyFrame()
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("2"))!)
+                    text = Double(String(Int(text)).appending("2"))!
                 }) {
                     Text("2")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("3"))!)
+                    text = Double(String(Int(text)).appending("3"))!
                 }) {
                             Text("3")
                         }.digitKeyFrame()
             }
             HStack(spacing:widthSpace){
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("4"))!)
+                    text = Double(String(Int(text)).appending("4"))!
                 }) {
                     Text("4")
                 }.digitKeyFrame()
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("5"))!)
+                    text = Double(String(Int(text)).appending("5"))!
                 }) {
                     Text("5")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("6"))!)
+                    text = Double(String(Int(text)).appending("6"))!
                 }) {
                     Text("6")
                 }.digitKeyFrame()
@@ -154,18 +154,18 @@ private struct ScrollableDigetPadView: View {
             
             HStack(spacing:widthSpace){
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("7"))!)
+                    text = Double(String(Int(text)).appending("7"))!
                 }) {
                     Text("7")
                 }.digitKeyFrame()
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("8"))!)
+                    text = Double(String(Int(text)).appending("8"))!
                 }) {
                     Text("8")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("9"))!)
+                    text = Double(String(Int(text)).appending("9"))!
                 }) {
                     Text("9")
                 }
@@ -175,7 +175,7 @@ private struct ScrollableDigetPadView: View {
                 Spacer()
                     .padding(1)
                 Button(action: {
-                    text = Double(Int(String(Int(text)).appending("0"))!)
+                    text = Double(String(Int(text)).appending("0"))!
                 }) {
                     Text("0")
                 }
@@ -448,6 +448,8 @@ struct TextViewStyle: ButtonStyle {
 #if DEBUG && os(watchOS)
 struct EnteredText_Previews: PreviewProvider {
 	static var previews: some View {
+        ScrollableEnteredText(text: .constant(0), presentedAsModal: .constant(true))
+        
         EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers)
         Group {
             EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
