@@ -128,7 +128,7 @@ private struct ScrollableDigetPadView: View {
         VStack(spacing: 1) {
             HStack(spacing: widthSpace){
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("1")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("1")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -137,7 +137,7 @@ private struct ScrollableDigetPadView: View {
                 }
                 .digitKeyFrame()
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("2")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("2")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -145,7 +145,7 @@ private struct ScrollableDigetPadView: View {
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("3")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("3")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -154,14 +154,14 @@ private struct ScrollableDigetPadView: View {
             }
             HStack(spacing:widthSpace){
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("4")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("4")), result >= min && max >= result {
                         text = result
                     }
                 }) {
                     Text("4")
                 }.digitKeyFrame()
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("5")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("5")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -169,7 +169,7 @@ private struct ScrollableDigetPadView: View {
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("6")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("6")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -179,14 +179,14 @@ private struct ScrollableDigetPadView: View {
             
             HStack(spacing:widthSpace){
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("7")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("7")), result >= min && max >= result {
                         text = result
                     }
                 }) {
                     Text("7")
                 }.digitKeyFrame()
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("8")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("8")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -194,7 +194,7 @@ private struct ScrollableDigetPadView: View {
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("9")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("9")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -206,7 +206,7 @@ private struct ScrollableDigetPadView: View {
                 Spacer()
                     .padding(1)
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("10")), result > min && max > result {
+                    if let result = Double(String(format: "%.0f", text).appending("10")), result >= min && max >= result {
                         text = result
                     }
                 }) {
@@ -216,7 +216,7 @@ private struct ScrollableDigetPadView: View {
                 
                 Button(action: {
                     let result = Double(Int(text) / 10)
-                    if result > min && max > result {
+                    if result >= min && max >= result {
                         text = result
                     }
                 }) {
