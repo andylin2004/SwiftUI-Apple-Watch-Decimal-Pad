@@ -15,16 +15,20 @@ import SwiftUI
 public struct ScrollableDigiTextView: View {
     private var locale: Locale
     var placeholder: String
+    var min: Double
+    var max: Double
     @Binding public var text: Double
     @State public var presentingModal: Bool
     
     var align: TextViewAlignment
-    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current){
+    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current, min: Double = Double(Int.min), max: Double = Double(Int.max)){
         _text = text
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
         self.placeholder = placeholder
         self.locale = locale
+        self.min = min
+        self.max = max
     }
     
     public var body: some View {
@@ -47,16 +51,20 @@ public struct ScrollableDigiTextView: View {
 private struct ScrollableEnteredText: View {
     @Binding var text: Double
     @Binding var presentedAsModal: Bool
+    var min: Double
+    var max: Double
     var watchOSDimensions: CGRect?
     private var locale: Locale
     
     public init(text: Binding<Double>, presentedAsModal:
-                Binding<Bool>, locale: Locale = .current){
+                Binding<Bool>, locale: Locale = .current, min: Double = Double(Int.min), max: Double = Double(Int.max)){
         _text = text
         _presentedAsModal = presentedAsModal
         self.locale = locale
         let device = WKInterfaceDevice.current()
         watchOSDimensions = device.screenBounds
+        self.min = min
+        self.max = max
     }
     public var body: some View{
         VStack(alignment: .trailing) {
@@ -73,7 +81,7 @@ private struct ScrollableEnteredText: View {
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                         .focusable(true)
-                        .digitalCrownRotation($text, from: 0, through: 999999, by: 1, sensitivity: .low, isContinuous: true)
+                        .digitalCrownRotation($text, from: Double(Swift.max(0, min)), through: Double(Swift.min(999999, max)), by: 1, sensitivity: .low, isContinuous: true)
                 }
                 .buttonStyle(PlainButtonStyle())
                 .multilineTextAlignment(.trailing)
@@ -104,49 +112,66 @@ private struct ScrollableDigetPadView: View {
     public var widthSpace: CGFloat = 1.0
     @Binding var text: Double
     private var decimalSeparator: String
-    public init(text: Binding<Double>, locale: Locale = .current) {
+    var min: Double
+    var max: Double
+    
+    public init(text: Binding<Double>, locale: Locale = .current, min: Double = Double(Int.min), max: Double = Double(Int.max)) {
         _text = text
 
         let numberFormatter = NumberFormatter()
         numberFormatter.locale = locale
         decimalSeparator = numberFormatter.decimalSeparator
+        self.min = min
+        self.max = max
     }
     public var body: some View {
         VStack(spacing: 1) {
             HStack(spacing: widthSpace){
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("1"))!
+                    if let result = Double(String(format: "%.0f", text).appending("1")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("1")
                         .padding(0)
                 }
                 .digitKeyFrame()
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("2"))!
+                    if let result = Double(String(format: "%.0f", text).appending("2")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("2")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("3"))!
+                    if let result = Double(String(format: "%.0f", text).appending("3")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("3")
                 }.digitKeyFrame()
             }
             HStack(spacing:widthSpace){
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("4"))!
+                    if let result = Double(String(format: "%.0f", text).appending("4")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("4")
                 }.digitKeyFrame()
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("5"))!
+                    if let result = Double(String(format: "%.0f", text).appending("5")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("5")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("6"))!
+                    if let result = Double(String(format: "%.0f", text).appending("6")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("6")
                 }.digitKeyFrame()
@@ -154,18 +179,24 @@ private struct ScrollableDigetPadView: View {
             
             HStack(spacing:widthSpace){
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("7"))!
+                    if let result = Double(String(format: "%.0f", text).appending("7")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("7")
                 }.digitKeyFrame()
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("8"))!
+                    if let result = Double(String(format: "%.0f", text).appending("8")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("8")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("9"))!
+                    if let result = Double(String(format: "%.0f", text).appending("9")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("9")
                 }
@@ -175,14 +206,19 @@ private struct ScrollableDigetPadView: View {
                 Spacer()
                     .padding(1)
                 Button(action: {
-                    text = Double(String(format: "%.0f", text).appending("0"))!
+                    if let result = Double(String(format: "%.0f", text).appending("10")), result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Text("0")
                 }
                 .digitKeyFrame()
                 
                 Button(action: {
-                    text = Double(Int(text) / 10)
+                    let result = Double(Int(text) / 10)
+                    if result > min && max > result {
+                        text = result
+                    }
                 }) {
                     Image(systemName: "delete.left")
                 }
