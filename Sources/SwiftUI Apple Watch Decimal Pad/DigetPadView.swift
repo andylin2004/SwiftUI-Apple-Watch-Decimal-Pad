@@ -206,7 +206,7 @@ private struct ScrollableDigetPadView: View {
                 Spacer()
                     .padding(1)
                 Button(action: {
-                    if let result = Int(String(format: "%.0f", text).appending("10")), result >= min && max >= result {
+                    if let result = Int(String(format: "%.0f", text).appending("0")), result >= min && max >= result {
                         text = Double(result)
                     }
                 }) {
