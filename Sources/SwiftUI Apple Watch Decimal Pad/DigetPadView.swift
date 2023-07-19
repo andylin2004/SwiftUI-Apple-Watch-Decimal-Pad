@@ -21,7 +21,7 @@ public struct ScrollableDigiTextView: View {
     @State public var presentingModal: Bool
     
     var align: TextViewAlignment
-    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current, min: Int = Int.min, max: Int = Int.max){
+    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current, min: Int = Int.min, max: Int = 99999999999){
         _text = text
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
@@ -57,7 +57,7 @@ private struct ScrollableEnteredText: View {
     private var locale: Locale
     
     public init(text: Binding<Double>, presentedAsModal:
-                Binding<Bool>, locale: Locale = .current, min: Int = Int.min, max: Int = Int.max){
+                Binding<Bool>, locale: Locale = .current, min: Int = Int.min, max: Int = 99999999999){
         _text = text
         _presentedAsModal = presentedAsModal
         self.locale = locale
@@ -115,7 +115,7 @@ private struct ScrollableDigetPadView: View {
     var min: Int
     var max: Int
     
-    public init(text: Binding<Double>, locale: Locale = .current, min: Int = Int.min, max: Int = Int.max) {
+    public init(text: Binding<Double>, locale: Locale = .current, min: Int = Int.min, max: Int = 99999999999) {
         _text = text
 
         let numberFormatter = NumberFormatter()
