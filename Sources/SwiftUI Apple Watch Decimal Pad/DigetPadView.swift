@@ -38,7 +38,7 @@ public struct ScrollableDigiTextView: View {
             Text(String(format: "%.0f", text))
         }.buttonStyle(TextViewStyle(alignment: align))
         .sheet(isPresented: $presentingModal, content: {
-            ScrollableEnteredText(text: $text, presentedAsModal: $presentingModal, locale: locale)
+            ScrollableEnteredText(text: $text, presentedAsModal: $presentingModal, locale: locale, min: min, max: max)
         })
     }
 }
@@ -87,7 +87,7 @@ private struct ScrollableEnteredText: View {
                 .multilineTextAlignment(.trailing)
                 .lineLimit(1)
                 
-                ScrollableDigetPadView(text: $text, locale: locale)
+                ScrollableDigetPadView(text: $text, locale: locale, min: min, max: max)
                     .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
         }
         .toolbar(content: {
