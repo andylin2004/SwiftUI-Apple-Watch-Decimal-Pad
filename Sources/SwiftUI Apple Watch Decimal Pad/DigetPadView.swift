@@ -128,8 +128,8 @@ private struct ScrollableDigetPadView: View {
         VStack(spacing: 1) {
             HStack(spacing: widthSpace){
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("1")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("1")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("1")
@@ -137,16 +137,16 @@ private struct ScrollableDigetPadView: View {
                 }
                 .digitKeyFrame()
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("2")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("2")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("2")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("3")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("3")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("3")
@@ -154,23 +154,23 @@ private struct ScrollableDigetPadView: View {
             }
             HStack(spacing:widthSpace){
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("4")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("4")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("4")
                 }.digitKeyFrame()
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("5")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("5")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("5")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("6")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("6")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("6")
@@ -179,23 +179,23 @@ private struct ScrollableDigetPadView: View {
             
             HStack(spacing:widthSpace){
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("7")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("7")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("7")
                 }.digitKeyFrame()
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("8")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("8")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("8")
                 }.digitKeyFrame()
                 
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("9")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("9")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("9")
@@ -206,8 +206,8 @@ private struct ScrollableDigetPadView: View {
                 Spacer()
                     .padding(1)
                 Button(action: {
-                    if let result = Double(String(format: "%.0f", text).appending("10")), Double(result) >= Double(min) && Double(max) >= Double(result) {
-                        text = result
+                    if let result = Int(String(format: "%.0f", text).appending("10")), result >= min && max >= result {
+                        text = Double(result)
                     }
                 }) {
                     Text("0")
@@ -216,7 +216,7 @@ private struct ScrollableDigetPadView: View {
                 
                 Button(action: {
                     let result = Double(Int(text) / 10)
-                    if Double(result) >= Double(min) && Double(max) >= Double(result) {
+                    if Int(result) >= min && max >= Int(result) {
                         text = result
                     }
                 }) {
@@ -482,52 +482,66 @@ struct TextViewStyle: ButtonStyle {
 #endif
 
 #if DEBUG && os(watchOS)
+struct PreviewView: View {
+    @State var double = 0.0
+    @State var modal = false
+    
+    var body: some View {
+        ScrollableDigiTextView(placeholder: "", text: $double, presentingModal: modal, min: 0, max: Int(Int32.max))
+    }
+}
+
 struct EnteredText_Previews: PreviewProvider {
-	static var previews: some View {
-        ScrollableEnteredText(text: .constant(0), presentedAsModal: .constant(true))
-        
-        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers)
-        Group {
-            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
-            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
-                .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
-                .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-                .accessibilityElement(children: /*@START_MENU_TOKEN@*/.contain/*@END_MENU_TOKEN@*/)
-                
-        }
-        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal).previewDevice("Apple Watch Series 6 - 40mm")
-        Group {
-            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers).previewDevice("Apple Watch Series 3 - 38mm")
-            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers).environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge).previewDevice("Apple Watch Series 3 - 38mm")
-        }
-        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal).previewDevice("Apple Watch Series 3 - 42mm")
-	}
+    static var previews: some View {
+        PreviewView()
+    }
 }
-
-struct Content_View_Previews: PreviewProvider {
-	static var previews: some View{
-		ScrollView {
-			ForEach(0 ..< 4) { item in
-				DigiTextView(placeholder: "Placeholder", text: .constant(""), presentingModal: false, alignment: .leading)
-			}
-			Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
-				/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
-			}
-		}
-	}
-}
-
-struct TextField_Previews: PreviewProvider {
-	static var previews: some View{
-		ScrollView{
-			ForEach(0 ..< 4){ item in
-				TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-			}
-			Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
-				/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
-			}
-		}
-	}
-}
+//struct EnteredText_Previews: PreviewProvider {
+//	static var previews: some View {
+//        ScrollableEnteredText(text: .constant(0), presentedAsModal: .constant(true))
+//        
+//        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers)
+//        Group {
+//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
+//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
+//                .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
+//                .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+//                .accessibilityElement(children: /*@START_MENU_TOKEN@*/.contain/*@END_MENU_TOKEN@*/)
+//                
+//        }
+//        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal).previewDevice("Apple Watch Series 6 - 40mm")
+//        Group {
+//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers).previewDevice("Apple Watch Series 3 - 38mm")
+//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers).environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge).previewDevice("Apple Watch Series 3 - 38mm")
+//        }
+//        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal).previewDevice("Apple Watch Series 3 - 42mm")
+//	}
+//}
+//
+//struct Content_View_Previews: PreviewProvider {
+//	static var previews: some View{
+//		ScrollView {
+//			ForEach(0 ..< 4) { item in
+//				DigiTextView(placeholder: "Placeholder", text: .constant(""), presentingModal: false, alignment: .leading)
+//			}
+//			Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
+//				/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
+//			}
+//		}
+//	}
+//}
+//
+//struct TextField_Previews: PreviewProvider {
+//	static var previews: some View{
+//		ScrollView{
+//			ForEach(0 ..< 4){ item in
+//				TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+//			}
+//			Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
+//				/*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
+//			}
+//		}
+//	}
+//}
 #endif
