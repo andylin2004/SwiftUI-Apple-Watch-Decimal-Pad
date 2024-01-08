@@ -21,7 +21,7 @@ public struct ScrollableDigiTextView: View {
     @State public var presentingModal: Bool
     
     var align: TextViewAlignment
-    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current, min: Int = Int.min, max: Int = 99999999999){
+    public init( placeholder: String, text: Binding<Double>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current, min: Int = Int.min, max: Int = 9999999999){
         _text = text
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
