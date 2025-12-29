@@ -123,39 +123,41 @@ public struct DigetPadView: View {
         decimalSeparator = numberFormatter.decimalSeparator
     }
     public var body: some View {
-        if #available(watchOS 26, *) {
-            Grid {
-                GridRow {
-                    topRow
+        Group {
+            if #available(watchOS 26, *) {
+                Grid(horizontalSpacing: widthSpace, verticalSpacing: 1) {
+                    GridRow {
+                        topRow
+                    }
+                    GridRow {
+                        upMidRow
+                    }
+                    GridRow {
+                        lowMidRow
+                    }
+                    GridRow {
+                        bottomRow
+                    }
                 }
-                GridRow {
-                    upMidRow
-                }
-                GridRow {
-                    lowMidRow
-                }
-                GridRow {
-                    bottomRow
+            } else {
+                VStack(spacing: 1) {
+                    HStack(spacing: widthSpace){
+                        topRow
+                    }
+                    HStack(spacing:widthSpace){
+                        upMidRow
+                    }
+                    
+                    HStack(spacing:widthSpace){
+                        lowMidRow
+                    }
+                    HStack(spacing:widthSpace) {
+                        bottomRow
+                    }
                 }
             }
-        } else {
-            VStack(spacing: 1) {
-                HStack(spacing: widthSpace){
-                    topRow
-                }
-                HStack(spacing:widthSpace){
-                    upMidRow
-                }
-                
-                HStack(spacing:widthSpace){
-                    lowMidRow
-                }
-                HStack(spacing:widthSpace) {
-                    bottomRow
-                }
-            }
-            .font(.title2)
         }
+        .font(.title2)
     }
     
     var topRow: some View {
