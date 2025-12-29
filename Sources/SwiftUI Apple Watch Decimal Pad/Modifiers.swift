@@ -27,8 +27,12 @@ public struct DigitButtonModifier: ViewModifier {
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
 public extension Button {
-	func digitKeyFrame() -> some View {
-		self.modifier(DigitButtonModifier())
+	@ViewBuilder func digitKeyFrame() -> some View {
+        if #available(watchOS 26, *) {
+            self.buttonStyle(.glass)
+        } else {
+            self.modifier(DigitButtonModifier())
+        }
 	}
 }
 
