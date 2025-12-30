@@ -20,7 +20,7 @@ public struct DigiTextView: View {
     @State public var presentingModal: Bool
     
     var align: TextViewAlignment
-    public init( placeholder: String, text: Binding<String>, presentingModal:Bool, alignment: TextViewAlignment = .center,style: KeyboardStyle = .numbers, locale: Locale = .current){
+    public init(placeholder: String, text: Binding<String>, presentingModal:Bool, alignment: TextViewAlignment = .center,style: KeyboardStyle = .numbers, locale: Locale = .current){
         _text = text
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
@@ -47,6 +47,49 @@ public struct DigiTextView: View {
             })
     }
 }
+
+@available(watchOS 6.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+public struct DigiNumberView: View {
+    private var locale: Locale
+    var style: KeyboardStyle
+    var placeholder: String
+    @Binding public var number: Int
+    @State public var presentingModal: Bool
+    
+    var align: TextViewAlignment
+    public init(placeholder: String, number: Binding<Int>, presentingModal:Bool, alignment: TextViewAlignment = .center,style: KeyboardStyle = .numbers, locale: Locale = .current){
+        _number = number
+        _presentingModal = State(initialValue: presentingModal)
+        self.align = alignment
+        self.placeholder = placeholder
+        self.style = style
+        self.locale = locale
+    }
+    
+    var text: Binding<String> {
+        Binding {
+            number.description
+        } set: { newValue in
+            number = Int(newValue) ?? 0
+        }
+    }
+    
+    public var body: some View {
+        Button(action: {
+            presentingModal.toggle()
+        }) {
+            Text(number.description)
+        }.buttonStyle(TextViewStyle(alignment: align))
+            .sheet(isPresented: $presentingModal, content: {
+                EnteredText(text: text, presentedAsModal: $presentingModal, style: self.style, locale: locale)
+            })
+    }
+}
+
 @available(watchOS 6.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
@@ -79,11 +122,11 @@ public struct EnteredText: View {
     
     public var body: some View{
         VStack(alignment: .trailing) {
-            if #available(watchOS 26, *) {
+            if #available(watchOS 9, *), style == .numbers {
                 Stepper(value: number, in: 0...Int.max) {
                     HStack {
                         Spacer()
-                        Text(number.wrappedValue.description)
+                        Text(text)
                             .font(.body)
                     }
                     .padding(.horizontal)
@@ -281,57 +324,55 @@ struct TextViewStyle: ButtonStyle {
 }
 #endif
 
-//#if DEBUG && os(watchOS)
-//struct EnteredText_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers)
-//        Group {
-//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
-//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
-//                .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal)
-//                .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-//                .accessibilityElement(children: /*@START_MENU_TOKEN@*/.contain/*@END_MENU_TOKEN@*/)
-//            
-//        }
-//        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal).previewDevice("Apple Watch Series 6 - 40mm")
-//        Group {
-//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers).previewDevice("Apple Watch Series 3 - 38mm")
-//            EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .numbers).environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge).previewDevice("Apple Watch Series 3 - 38mm")
-//        }
-//        EnteredText( text: .constant(""), presentedAsModal: .constant(true), style: .decimal).previewDevice("Apple Watch Series 3 - 42mm")
-//    }
-//}
-//
-//struct Content_View_Previews: PreviewProvider {
-//    static var previews: some View{
-//        ScrollView {
-//            ForEach(0 ..< 4) { item in
-//                DigiTextView(placeholder: "Placeholder", text: .constant(""), presentingModal: false, alignment: .leading)
-//            }
-//            Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
-//                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
-//            }
-//        }
-//    }
-//}
-//
-//struct TextField_Previews: PreviewProvider {
-//    static var previews: some View{
-//        ScrollView{
-//            ForEach(0 ..< 4){ item in
-//                TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
-//            }
-//            Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
-//                /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
-//            }
-//        }
-//    }
-//}
-//#endif
-
 @available(watchOS 10, *)
-#Preview {
+#Preview("Number Only") {
     @Previewable @State var text: String = "0"
     DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+}
+
+@available(watchOS 10, *)
+#Preview("Decimals") {
+    @Previewable @State var text: String = "0"
+    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading, style: .decimal)
+}
+
+@available(watchOS 10, *)
+#Preview("Decimal XXXL") {
+    @Previewable @State var text: String = "0"
+    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading, style: .decimal)
+        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+}
+
+@available(watchOS 10, *)
+#Preview("Decimal XXXL Accessibility Element") {
+    @Previewable @State var text: String = "0"
+    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading, style: .decimal)
+        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+        .accessibilityElement(children: /*@START_MENU_TOKEN@*/.contain/*@END_MENU_TOKEN@*/)
+}
+
+@available(watchOS 10, *)
+#Preview("Scroll") {
+    @Previewable @State var text: String = ""
+    
+    ScrollView {
+        ForEach(0 ..< 4) { item in
+            DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+        }
+        Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
+        }
+    }
+}
+
+@available(watchOS 10, *)
+#Preview("Baseline") {
+    ScrollView{
+        ForEach(0 ..< 4){ item in
+            TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+        }
+        Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
+        }
+    }
 }
