@@ -88,6 +88,7 @@ public struct EnteredText: View {
                     }
                     .padding(.horizontal)
                 }
+                .focusable()
             } else {
                 Button(action:{
                     presentedAsModal.toggle()
@@ -123,6 +124,7 @@ public struct EnteredText: View {
         
     }
 }
+
 @available(watchOS 6.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
@@ -251,7 +253,6 @@ struct TextViewStyle: ButtonStyle {
     init(alignment: TextViewAlignment = .center) {
         self.align = alignment
     }
-    
     
     var align: TextViewAlignment
     func makeBody(configuration: Configuration) -> some View {
