@@ -49,23 +49,21 @@ public struct LiquidGlassDigitPadStyle: ButtonStyle {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .glassEffect(.regular.interactive(), in: .capsule)
             .contentShape(.capsule)
-            .highPriorityGesture(
-                DragGesture(minimumDistance: 0)
-                    .onChanged { _ in
-                        revertTask?.cancel()
-                        displayedPressed = true
-                    }
-                    .onEnded { _ in
-                        revertTask = Task {
-                            try? await Task.sleep(for: .seconds(0.08))
-                            if !Task.isCancelled {
-                                await MainActor.run {
-                                    displayedPressed = false
-                                }
+            .onChange(of: configuration.isPressed) { pressed in
+                if pressed {
+                    revertTask?.cancel()
+                    displayedPressed = true
+                } else {
+                    revertTask = Task {
+                        try? await Task.sleep(for: .seconds(0.08))
+                        if !Task.isCancelled {
+                            await MainActor.run {
+                                displayedPressed = false
                             }
                         }
                     }
-            )
+                }
+            }
             .onChange(of: displayedPressed) { pressed in
                 if pressed {
                     playClick()
