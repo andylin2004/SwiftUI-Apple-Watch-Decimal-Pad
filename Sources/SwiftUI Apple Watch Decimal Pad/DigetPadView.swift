@@ -18,9 +18,13 @@ public struct DigiTextView: View {
     var placeholder: String
     @Binding public var text: String
     @State public var presentingModal: Bool
-    
+
     var align: TextViewAlignment
-    public init(placeholder: String, text: Binding<String>, presentingModal:Bool, alignment: TextViewAlignment = .center,style: KeyboardStyle = .numbers, locale: Locale = .current){
+    public init(
+        placeholder: String, text: Binding<String>, presentingModal: Bool,
+        alignment: TextViewAlignment = .center, style: KeyboardStyle = .numbers,
+        locale: Locale = .current
+    ) {
         _text = text
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
@@ -28,23 +32,26 @@ public struct DigiTextView: View {
         self.style = style
         self.locale = locale
     }
-    
+
     public var body: some View {
         Button(action: {
             presentingModal.toggle()
         }) {
-            if text != ""{
+            if text != "" {
                 Text(text)
-            }
-            else{
+            } else {
                 Text(placeholder)
                     .lineLimit(1)
                     .opacity(0.5)
             }
         }.buttonStyle(TextViewStyle(alignment: align))
-            .sheet(isPresented: $presentingModal, content: {
-                EnteredText(text: $text, presentedAsModal: $presentingModal, style: self.style, locale: locale)
-            })
+            .sheet(
+                isPresented: $presentingModal,
+                content: {
+                    EnteredText(
+                        text: $text, presentedAsModal: $presentingModal, style: self.style,
+                        locale: locale)
+                })
     }
 }
 
@@ -58,16 +65,19 @@ public struct DigiNumberView: View {
     var placeholder: String
     @Binding public var number: Int
     @State public var presentingModal: Bool
-    
+
     var align: TextViewAlignment
-    public init(placeholder: String, number: Binding<Int>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current){
+    public init(
+        placeholder: String, number: Binding<Int>, presentingModal: Bool,
+        alignment: TextViewAlignment = .center, locale: Locale = .current
+    ) {
         _number = number
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
         self.placeholder = placeholder
         self.locale = locale
     }
-    
+
     var text: Binding<String> {
         Binding {
             number.description
@@ -75,16 +85,20 @@ public struct DigiNumberView: View {
             number = Int(newValue) ?? 0
         }
     }
-    
+
     public var body: some View {
         Button(action: {
             presentingModal.toggle()
         }) {
             Text(number.description)
         }.buttonStyle(TextViewStyle(alignment: align))
-            .sheet(isPresented: $presentingModal, content: {
-                EnteredText(text: text, presentedAsModal: $presentingModal, style: .numbers, locale: locale)
-            })
+            .sheet(
+                isPresented: $presentingModal,
+                content: {
+                    EnteredText(
+                        text: text, presentedAsModal: $presentingModal, style: .numbers,
+                        locale: locale)
+                })
     }
 }
 
@@ -99,9 +113,12 @@ public struct EnteredText: View {
     var style: KeyboardStyle
     var watchOSDimensions: CGRect?
     private var locale: Locale
-    
-    public init(text: Binding<String>, presentedAsModal:
-                Binding<Bool>, style: KeyboardStyle, locale: Locale = .current) {
+
+    public init(
+        text: Binding<String>,
+        presentedAsModal:
+            Binding<Bool>, style: KeyboardStyle, locale: Locale = .current
+    ) {
         _text = text
         _presentedAsModal = presentedAsModal
         self.style = style
@@ -109,7 +126,7 @@ public struct EnteredText: View {
         let device = WKInterfaceDevice.current()
         watchOSDimensions = device.screenBounds
     }
-    
+
     var number: Binding<Int> {
         Binding {
             Int(text) ?? 0
@@ -117,8 +134,8 @@ public struct EnteredText: View {
             text = String(new)
         }
     }
-    
-    public var body: some View{
+
+    public var body: some View {
         VStack(alignment: .trailing) {
             if #available(watchOS 9, *), style == .numbers {
                 Stepper(value: number, in: 0...Int.max) {
@@ -127,22 +144,24 @@ public struct EnteredText: View {
                         Text(text)
                             .font(.title2)
                             .minimumScaleFactor(0.5)
+                            .monospacedDigit()
                     }
                     .padding(.horizontal)
                     .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                 }
                 .focusable()
             } else {
-                Button(action:{
+                Button(action: {
                     presentedAsModal.toggle()
-                }){
+                }) {
                     ZStack(content: {
                         Text("1")
                             .font(.title2)
-                            .foregroundColor(.clear
+                            .foregroundColor(
+                                .clear
                             )
                     })
-                    
+
                     Text(text)
                         .font(.title2)
                         .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
@@ -151,12 +170,12 @@ public struct EnteredText: View {
                 .multilineTextAlignment(.trailing)
                 .lineLimit(1)
             }
-            
+
             DigetPadView(text: $text, style: style, locale: locale)
-                .edgesIgnoringSafeArea(/*@START_MENU_TOKEN@*/.all/*@END_MENU_TOKEN@*/)
+                .edgesIgnoringSafeArea( /*@START_MENU_TOKEN@*/.all /*@END_MENU_TOKEN@*/)
         }
         .toolbar(content: {
-            ToolbarItem(placement: .cancellationAction){
+            ToolbarItem(placement: .cancellationAction) {
                 Button {
                     presentedAsModal.toggle()
                 } label: {
@@ -164,7 +183,7 @@ public struct EnteredText: View {
                 }
             }
         })
-        
+
     }
 }
 
@@ -175,13 +194,13 @@ public struct EnteredText: View {
 @available(tvOS, unavailable)
 public struct DigetPadView: View {
     public var widthSpace: CGFloat = 1.0
-    @Binding var text:String
+    @Binding var text: String
     var style: KeyboardStyle
     private var decimalSeparator: String
     public init(text: Binding<String>, style: KeyboardStyle, locale: Locale = .current) {
         _text = text
         self.style = style
-        
+
         let numberFormatter = NumberFormatter()
         numberFormatter.locale = locale
         decimalSeparator = numberFormatter.decimalSeparator
@@ -206,17 +225,17 @@ public struct DigetPadView: View {
                 .font(.title3.bold())
             } else {
                 VStack(spacing: 1) {
-                    HStack(spacing: widthSpace){
+                    HStack(spacing: widthSpace) {
                         topRow
                     }
-                    HStack(spacing:widthSpace){
+                    HStack(spacing: widthSpace) {
                         upMidRow
                     }
-                    
-                    HStack(spacing:widthSpace){
+
+                    HStack(spacing: widthSpace) {
                         lowMidRow
                     }
-                    HStack(spacing:widthSpace) {
+                    HStack(spacing: widthSpace) {
                         bottomRow
                     }
                 }
@@ -224,7 +243,7 @@ public struct DigetPadView: View {
             }
         }
     }
-    
+
     var topRow: some View {
         Group {
             Button(action: {
@@ -240,7 +259,7 @@ public struct DigetPadView: View {
                 Text("2")
             }
             .digitKeyFrame()
-            
+
             Button(action: {
                 text.append("3")
             }) {
@@ -249,7 +268,7 @@ public struct DigetPadView: View {
             .digitKeyFrame()
         }
     }
-    
+
     var upMidRow: some View {
         Group {
             Button(action: {
@@ -264,7 +283,7 @@ public struct DigetPadView: View {
                 Text("5")
             }
             .digitKeyFrame()
-            
+
             Button(action: {
                 text.append("6")
             }) {
@@ -273,7 +292,7 @@ public struct DigetPadView: View {
             .digitKeyFrame()
         }
     }
-    
+
     var lowMidRow: some View {
         Group {
             Button(action: {
@@ -288,7 +307,7 @@ public struct DigetPadView: View {
                 Text("8")
             }
             .digitKeyFrame()
-            
+
             Button(action: {
                 text.append("9")
             }) {
@@ -297,15 +316,15 @@ public struct DigetPadView: View {
             .digitKeyFrame()
         }
     }
-    
+
     var bottomRow: some View {
         Group {
             if style == .decimal {
                 Button(action: {
-                    if !(text.contains(decimalSeparator)){
-                        if text == ""{
+                    if !(text.contains(decimalSeparator)) {
+                        if text == "" {
                             text.append("0\(decimalSeparator)")
-                        }else{
+                        } else {
                             text.append(decimalSeparator)
                         }
                     }
@@ -323,9 +342,9 @@ public struct DigetPadView: View {
                 Text("0")
             }
             .digitKeyFrame()
-            
+
             Button(action: {
-                if let last = text.indices.last{
+                if let last = text.indices.last {
                     text.remove(at: last)
                 }
             }) {
@@ -341,88 +360,105 @@ struct TextViewStyle: ButtonStyle {
     init(alignment: TextViewAlignment = .center) {
         self.align = alignment
     }
-    
+
     var align: TextViewAlignment
     func makeBody(configuration: Configuration) -> some View {
         HStack {
-            if align == .center || align == .trailing{
+            if align == .center || align == .trailing {
                 Spacer()
             }
             configuration.label
-                .font(/*@START_MENU_TOKEN@*/.body/*@END_MENU_TOKEN@*/)
+                .font( /*@START_MENU_TOKEN@*/.body /*@END_MENU_TOKEN@*/)
                 .padding(.vertical, 11.0)
                 .padding(.horizontal)
-            if align == .center || align == .leading{
+            if align == .center || align == .leading {
                 Spacer()
             }
         }
         .background(
             GeometryReader { geometry in
-                ZStack{
+                ZStack {
                     RoundedRectangle(cornerRadius: 7, style: .continuous)
-                        .fill(configuration.isPressed ? Color.gray.opacity(0.1): Color.gray.opacity(0.2))
+                        .fill(
+                            configuration.isPressed
+                                ? Color.gray.opacity(0.1) : Color.gray.opacity(0.2))
                 }
             })
-        
+
     }
-    
+
 }
 
 @available(watchOS 10, *)
 #Preview("Number Only") {
     @Previewable @State var text: String = "0"
-    return DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+    return DigiTextView(
+        placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
 }
 
 @available(watchOS 10, *)
 #Preview("Number Only") {
     @Previewable @State var number: Int = 0
-    return DigiNumberView(placeholder: "Placeholder", number: $number, presentingModal: false, alignment: .leading)
+    return DigiNumberView(
+        placeholder: "Placeholder", number: $number, presentingModal: false, alignment: .leading)
 }
 
 @available(watchOS 10, *)
 #Preview("Decimals") {
     @Previewable @State var text: String = "0"
-    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading, style: .decimal)
+    DigiTextView(
+        placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading,
+        style: .decimal)
 }
 
 @available(watchOS 10, *)
 #Preview("Decimal XXXL") {
     @Previewable @State var text: String = "0"
-    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading, style: .decimal)
-        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+    DigiTextView(
+        placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading,
+        style: .decimal
+    )
+    .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
 }
 
 @available(watchOS 10, *)
 #Preview("Decimal XXXL Accessibility Element") {
     @Previewable @State var text: String = "0"
-    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading, style: .decimal)
-        .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
-        .accessibilityElement(children: /*@START_MENU_TOKEN@*/.contain/*@END_MENU_TOKEN@*/)
+    DigiTextView(
+        placeholder: "Placeholder", text: $text, presentingModal: true, alignment: .leading,
+        style: .decimal
+    )
+    .environment(\.sizeCategory, .accessibilityExtraExtraExtraLarge)
+    .accessibilityElement(children: /*@START_MENU_TOKEN@*/ .contain /*@END_MENU_TOKEN@*/)
 }
 
 @available(watchOS 10, *)
 #Preview("Scroll") {
     @Previewable @State var text: String = ""
-    
+
     ScrollView {
-        ForEach(0 ..< 4) { item in
-            DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+        ForEach(0..<4) { item in
+            DigiTextView(
+                placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading
+            )
         }
-        Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
-            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
+        Button(action: /*@START_MENU_TOKEN@*/ /*@PLACEHOLDER=Action@*/{} /*@END_MENU_TOKEN@*/) {
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button") /*@END_MENU_TOKEN@*/
         }
     }
 }
 
 @available(watchOS 10, *)
 #Preview("Baseline") {
-    ScrollView{
-        ForEach(0 ..< 4){ item in
-            TextField(/*@START_MENU_TOKEN@*/"Placeholder"/*@END_MENU_TOKEN@*/, text: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Value@*/.constant("")/*@END_MENU_TOKEN@*/)
+    ScrollView {
+        ForEach(0..<4) { item in
+            TextField( /*@START_MENU_TOKEN@*/
+                "Placeholder" /*@END_MENU_TOKEN@*/,
+                text: /*@START_MENU_TOKEN@*/ /*@PLACEHOLDER=Value@*/.constant(
+                    "") /*@END_MENU_TOKEN@*/)
         }
-        Button(action: /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Action@*/{}/*@END_MENU_TOKEN@*/) {
-            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button")/*@END_MENU_TOKEN@*/
+        Button(action: /*@START_MENU_TOKEN@*/ /*@PLACEHOLDER=Action@*/{} /*@END_MENU_TOKEN@*/) {
+            /*@START_MENU_TOKEN@*//*@PLACEHOLDER=Content@*/Text("Button") /*@END_MENU_TOKEN@*/
         }
     }
 }
