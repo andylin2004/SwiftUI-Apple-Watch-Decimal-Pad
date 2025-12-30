@@ -61,12 +61,11 @@ public struct DigiNumberView: View {
     @State public var presentingModal: Bool
     
     var align: TextViewAlignment
-    public init(placeholder: String, number: Binding<Int>, presentingModal:Bool, alignment: TextViewAlignment = .center,style: KeyboardStyle = .numbers, locale: Locale = .current){
+    public init(placeholder: String, number: Binding<Int>, presentingModal:Bool, alignment: TextViewAlignment = .center, locale: Locale = .current){
         _number = number
         _presentingModal = State(initialValue: presentingModal)
         self.align = alignment
         self.placeholder = placeholder
-        self.style = style
         self.locale = locale
     }
     
@@ -85,7 +84,7 @@ public struct DigiNumberView: View {
             Text(number.description)
         }.buttonStyle(TextViewStyle(alignment: align))
             .sheet(isPresented: $presentingModal, content: {
-                EnteredText(text: text, presentedAsModal: $presentingModal, style: self.style, locale: locale)
+                EnteredText(text: text, presentedAsModal: $presentingModal, style: .numbers, locale: locale)
             })
     }
 }
