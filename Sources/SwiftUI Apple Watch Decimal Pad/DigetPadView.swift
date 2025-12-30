@@ -127,9 +127,10 @@ public struct EnteredText: View {
                     HStack {
                         Spacer()
                         Text(text)
-                            .font(.body)
+                            .font(.title2)
                     }
                     .padding(.horizontal)
+                    .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                 }
                 .focusable()
             } else {
@@ -370,7 +371,13 @@ struct TextViewStyle: ButtonStyle {
 @available(watchOS 10, *)
 #Preview("Number Only") {
     @Previewable @State var text: String = "0"
-    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+    return DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+}
+
+@available(watchOS 10, *)
+#Preview("Number Only") {
+    @Previewable @State var number: Int = 0
+    return DigiNumberView(placeholder: "Placeholder", number: $number, presentingModal: false, alignment: .leading)
 }
 
 @available(watchOS 10, *)
