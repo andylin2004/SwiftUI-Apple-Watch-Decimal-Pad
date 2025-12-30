@@ -62,7 +62,6 @@ public struct DigiTextView: View {
 @available(tvOS, unavailable)
 public struct DigiNumberView: View {
     private var locale: Locale
-    var style: KeyboardStyle
     var placeholder: String
     @Binding public var number: Int
     @State public var presentingModal: Bool
