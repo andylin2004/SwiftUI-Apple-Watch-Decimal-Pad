@@ -125,7 +125,7 @@ public struct EnteredText: View {
             if #available(watchOS 9, *), style == .numbers {
                 Stepper(value: number, in: 0...Int.max) {
                     HStack {
-                        Spacer()
+                        Spacer(minLength: 0)
                         Text(text)
                             .font(.title2)
                     }
@@ -204,6 +204,7 @@ public struct DigetPadView: View {
                         bottomRow
                     }
                 }
+                .font(.title3.bold())
             } else {
                 VStack(spacing: 1) {
                     HStack(spacing: widthSpace){
@@ -220,9 +221,9 @@ public struct DigetPadView: View {
                         bottomRow
                     }
                 }
+                .font(.title2)
             }
         }
-        .font(.title2)
     }
     
     var topRow: some View {
