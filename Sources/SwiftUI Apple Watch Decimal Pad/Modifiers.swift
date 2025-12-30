@@ -14,10 +14,14 @@ import SwiftUI
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
 public struct DigitButtonModifier: ViewModifier {
-	public func body(content: Content) -> some View {
-		return content
-			.buttonStyle(DigitPadStyle())
-
+	@ViewBuilder public func body(content: Content) -> some View {
+        if #available(watchOS 26, *) {
+            content
+                .buttonStyle(LiquidGlassDigitPadStyle())
+        } else {
+            content
+                .buttonStyle(DigitPadStyle())
+        }
 	}
 }
 
@@ -27,9 +31,48 @@ public struct DigitButtonModifier: ViewModifier {
 @available(iOS, unavailable)
 @available(tvOS, unavailable)
 public extension Button {
-	func digitKeyFrame() -> some View {
-		self.modifier(DigitButtonModifier())
+	@ViewBuilder func digitKeyFrame() -> some View {
+        self.modifier(DigitButtonModifier())
 	}
+}
+
+@available(watchOS 26.0, *)
+@available(macOS, unavailable)
+@available(macCatalyst, unavailable)
+@available(iOS, unavailable)
+@available(tvOS, unavailable)
+public struct LiquidGlassDigitPadStyle: ButtonStyle {
+    @State private var displayedPressed = false
+    @State private var revertTask: Task<Void, Error>?
+    public func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .glassEffect(.regular.interactive(), in: .capsule)
+            .contentShape(.capsule)
+            .highPriorityGesture(
+                DragGesture(minimumDistance: 0)
+                    .onChanged { _ in
+                        revertTask?.cancel()
+                        displayedPressed = true
+                    }
+                    .onEnded { _ in
+                        revertTask = Task {
+                            try? await Task.sleep(for: .seconds(0.08))
+                            if !Task.isCancelled {
+                                await MainActor.run {
+                                    displayedPressed = false
+                                }
+                            }
+                        }
+                    }
+            )
+            .onChange(of: displayedPressed) { pressed in
+                if pressed {
+                    playClick()
+                }
+            }
+            .zIndex(displayedPressed ? 1 : 0)
+    }
 }
 
 @available(watchOS 6.0, *)
@@ -41,12 +84,12 @@ public struct DigitPadStyle: ButtonStyle {
 	public func makeBody(configuration: Configuration) -> some View {
         GeometryReader(content: { geometry in
             configuration.isPressed ?
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Color.gray.opacity(0.7))
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .scaleEffect(1.5)
-                :
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+            :
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(Color.gray.opacity(0.5))
                 .frame(width:  geometry.size.width, height:  geometry.size.height)
                 .scaleEffect(1)
@@ -58,27 +101,26 @@ public struct DigitPadStyle: ButtonStyle {
                             RoundedRectangle(cornerRadius: 10, style: .continuous)
                                 .fill(Color.clear)
                                 .frame(width: configuration.isPressed ? geometry.size.width/0.75 : geometry.size.width, height: configuration.isPressed ? geometry.size.height/0.8 : geometry.size.height)
-                                
                         })
-                        
-                        
                     }
                 )
                 .frame(width: geometry.size.width, height: geometry.size.height)
                 .scaleEffect(configuration.isPressed ? 1.2 : 1)
         })
-			.onChange(of: configuration.isPressed, perform: { value in
-				if configuration.isPressed{
-					DispatchQueue.main.async {
-                        #if os(watchOS)
-                        WKInterfaceDevice().play(.click)
-                        #endif
-                        
-					}
-				}
-			})
-        
-	}
+        .onChange(of: configuration.isPressed, perform: { value in
+            if configuration.isPressed{
+                playClick()
+            }
+        })
+    }
+}
+
+fileprivate func playClick() {
+    DispatchQueue.main.async {
+        #if os(watchOS)
+        WKInterfaceDevice().play(.click)
+        #endif
+    }
 }
 
 public enum TextViewAlignment {
