@@ -126,6 +126,7 @@ public struct EnteredText: View {
                         Spacer(minLength: 0)
                         Text(text)
                             .font(.title2)
+                            .minimumScaleFactor(0.5)
                     }
                     .padding(.horizontal)
                     .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
