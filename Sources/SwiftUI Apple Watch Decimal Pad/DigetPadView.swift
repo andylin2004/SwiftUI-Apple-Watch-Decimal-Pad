@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-#if os(watchOS)
+
 @available(watchOS 6.0, *)
 @available(macOS, unavailable)
 @available(macCatalyst, unavailable)
@@ -123,11 +123,13 @@ public struct EnteredText: View {
             if #available(watchOS 9, *), style == .numbers {
                 Stepper(value: number, in: 0...Int.max) {
                     HStack {
-                        Spacer()
+                        Spacer(minLength: 0)
                         Text(text)
-                            .font(.body)
+                            .font(.title2)
+                            .minimumScaleFactor(0.5)
                     }
                     .padding(.horizontal)
+                    .frame(height: watchOSDimensions!.height * 0.15, alignment: .trailing)
                 }
                 .focusable()
             } else {
@@ -185,107 +187,152 @@ public struct DigetPadView: View {
         decimalSeparator = numberFormatter.decimalSeparator
     }
     public var body: some View {
-        VStack(spacing: 1) {
-            HStack(spacing: widthSpace){
-                Button(action: {
-                    text.append("1")
-                }) {
-                    Text("1")
-                        .padding(0)
-                }
-                .digitKeyFrame()
-                Button(action: {
-                    text.append("2")
-                }) {
-                    Text("2")
-                }
-                .digitKeyFrame()
-                
-                Button(action: {
-                    text.append("3")
-                }) {
-                    Text("3")
-                }
-                .digitKeyFrame()
-            }
-            HStack(spacing:widthSpace){
-                Button(action: {
-                    text.append("4")
-                }) {
-                    Text("4")
-                }.digitKeyFrame()
-                Button(action: {
-                    text.append("5")
-                }) {
-                    Text("5")
-                }
-                .digitKeyFrame()
-                
-                Button(action: {
-                    text.append("6")
-                }) {
-                    Text("6")
-                }
-                .digitKeyFrame()
-            }
-            
-            HStack(spacing:widthSpace){
-                Button(action: {
-                    text.append("7")
-                }) {
-                    Text("7")
-                }
-                .digitKeyFrame()
-                Button(action: {
-                    text.append("8")
-                }) {
-                    Text("8")
-                }
-                .digitKeyFrame()
-                
-                Button(action: {
-                    text.append("9")
-                }) {
-                    Text("9")
-                }
-                .digitKeyFrame()
-            }
-            HStack(spacing:widthSpace) {
-                if style == .decimal {
-                    Button(action: {
-                        if !(text.contains(decimalSeparator)){
-                            if text == ""{
-                                text.append("0\(decimalSeparator)")
-                            }else{
-                                text.append(decimalSeparator)
-                            }
-                        }
-                    }) {
-                        Text(decimalSeparator)
+        Group {
+            if #available(watchOS 26, *) {
+                Grid(horizontalSpacing: widthSpace, verticalSpacing: 1) {
+                    GridRow {
+                        topRow
                     }
-                    .digitKeyFrame()
-                } else {
-                    Spacer()
-                        .padding(1)
-                }
-                Button(action: {
-                    text.append("0")
-                }) {
-                    Text("0")
-                }
-                .digitKeyFrame()
-                
-                Button(action: {
-                    if let last = text.indices.last{
-                        text.remove(at: last)
+                    GridRow {
+                        upMidRow
                     }
-                }) {
-                    Image(systemName: "delete.left")
+                    GridRow {
+                        lowMidRow
+                    }
+                    GridRow {
+                        bottomRow
+                    }
                 }
-                .digitKeyFrame()
+                .font(.title3.bold())
+            } else {
+                VStack(spacing: 1) {
+                    HStack(spacing: widthSpace){
+                        topRow
+                    }
+                    HStack(spacing:widthSpace){
+                        upMidRow
+                    }
+                    
+                    HStack(spacing:widthSpace){
+                        lowMidRow
+                    }
+                    HStack(spacing:widthSpace) {
+                        bottomRow
+                    }
+                }
+                .font(.title2)
             }
         }
-        .font(.title2)
+    }
+    
+    var topRow: some View {
+        Group {
+            Button(action: {
+                text.append("1")
+            }) {
+                Text("1")
+                    .padding(0)
+            }
+            .digitKeyFrame()
+            Button(action: {
+                text.append("2")
+            }) {
+                Text("2")
+            }
+            .digitKeyFrame()
+            
+            Button(action: {
+                text.append("3")
+            }) {
+                Text("3")
+            }
+            .digitKeyFrame()
+        }
+    }
+    
+    var upMidRow: some View {
+        Group {
+            Button(action: {
+                text.append("4")
+            }) {
+                Text("4")
+            }
+            .digitKeyFrame()
+            Button(action: {
+                text.append("5")
+            }) {
+                Text("5")
+            }
+            .digitKeyFrame()
+            
+            Button(action: {
+                text.append("6")
+            }) {
+                Text("6")
+            }
+            .digitKeyFrame()
+        }
+    }
+    
+    var lowMidRow: some View {
+        Group {
+            Button(action: {
+                text.append("7")
+            }) {
+                Text("7")
+            }
+            .digitKeyFrame()
+            Button(action: {
+                text.append("8")
+            }) {
+                Text("8")
+            }
+            .digitKeyFrame()
+            
+            Button(action: {
+                text.append("9")
+            }) {
+                Text("9")
+            }
+            .digitKeyFrame()
+        }
+    }
+    
+    var bottomRow: some View {
+        Group {
+            if style == .decimal {
+                Button(action: {
+                    if !(text.contains(decimalSeparator)){
+                        if text == ""{
+                            text.append("0\(decimalSeparator)")
+                        }else{
+                            text.append(decimalSeparator)
+                        }
+                    }
+                }) {
+                    Text(decimalSeparator)
+                }
+                .digitKeyFrame()
+            } else {
+                Spacer()
+                    .padding(1)
+            }
+            Button(action: {
+                text.append("0")
+            }) {
+                Text("0")
+            }
+            .digitKeyFrame()
+            
+            Button(action: {
+                if let last = text.indices.last{
+                    text.remove(at: last)
+                }
+            }) {
+                Image(systemName: "delete.left")
+            }
+            .digitKeyFrame()
+        }
     }
 }
 
@@ -320,12 +367,17 @@ struct TextViewStyle: ButtonStyle {
     }
     
 }
-#endif
 
 @available(watchOS 10, *)
 #Preview("Number Only") {
     @Previewable @State var text: String = "0"
-    DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+    return DigiTextView(placeholder: "Placeholder", text: $text, presentingModal: false, alignment: .leading)
+}
+
+@available(watchOS 10, *)
+#Preview("Number Only") {
+    @Previewable @State var number: Int = 0
+    return DigiNumberView(placeholder: "Placeholder", number: $number, presentingModal: false, alignment: .leading)
 }
 
 @available(watchOS 10, *)
